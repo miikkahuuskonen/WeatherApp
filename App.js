@@ -8,7 +8,7 @@ export default class App extends React.Component {
     this.state = {
       weather: [],
       temp: 0,
-      url: '',
+      uri: ' ',
       text: '',
     };
   }
@@ -24,14 +24,16 @@ export default class App extends React.Component {
 
   fetchWeather() {
     console.log('fetching...');
-    fetch('http://api.openweathermap.org/data/2.5/weather?q='+ this.state.text +'fi&APPID=bd0b860872e0a1bd7adc0f263dbff87a&units=metric')
+    fetch('http://api.openweathermap.org/data/2.5/weather?q='+ this.state.text +'&lang=fi&APPID=bd0b860872e0a1bd7adc0f263dbff87a&units=metric')
     .then(result => result.json())
     .then(result => this.setState({
           city: this.state.text,
           weather: result.weather[0],
           temp: result.main.temp,
+          uri: 'http://openweathermap.org/img/w/' + result.weather[0].icon + '.png',
       })
     );
+    console.log(this.state.uri);
   }
 
   render() {
@@ -46,6 +48,10 @@ export default class App extends React.Component {
           <Text style={styles.bottomText}>City: {this.state.text} </Text>
           <Text style={styles.bottomText}>Temperature: {this.state.temp} Celsius</Text>
           <Text style={styles.bottomText}>Weather:  {this.state.weather.main}</Text>
+          <Image
+            source={{uri: this.state.uri}}
+            style={styles.image}
+          />
         </View>
       </View>
     );
@@ -90,6 +96,13 @@ const styles = StyleSheet.create({
   bottomText: {
     fontSize: 24,
     alignSelf: 'center',
+  },
+
+  image: {
+    marginTop: 40,
+    alignSelf: 'center',
+    width: 100,
+    height: 100,
   },
 
 });
